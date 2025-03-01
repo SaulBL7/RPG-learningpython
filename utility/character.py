@@ -20,10 +20,11 @@ class Player:
         self.level = 1
         self.exp = 0
         self.exp_max = 100
-        self.gold = 1000
+        self.gold = 0
         self.weapon = {}
         self.armor = {}
         self.trinket = {}
+        self.buffs = {}
         self.alive = True
         self.action = False
         self.hp_regen = 0
@@ -96,6 +97,22 @@ class Player:
         print('Spells')
         for spell, attributes in self.magics.items():
             print(f"{spell} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
+        print('--------------------------------------------------------------------')
+        print('Spells')
+        for buff, attributes in self.buffs.items():
+            print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
+        print('--------------------------------------------------------------------')
+
+    def status_battle(self):
+        print('--------------------------------------------------------------------')
+        print(f'Character: {self.name} | Class: {self.class_name} | Level: {self.level}')
+        print(f'HP: {self.hp}/{self.hp_max} | {self.resource.capitalize()}: {self.mana}/{self.mana_max}')
+        print(f'Strength: {self.str} | Dexterity: {self.dex} | Intelligence: {self.int}')
+        print(f'Crit: {self.crit}% | P.DEF: {self.pdef}% | M.DEF: {self.mdef}% | Dodge: {self.dodge}%')
+        print('Buffs')
+        print('--------------------------------------------------------------------')
+        for buff, attributes in self.buffs.items():
+            print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
         print('--------------------------------------------------------------------')
 
 def create_character():

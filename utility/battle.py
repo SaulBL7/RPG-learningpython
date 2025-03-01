@@ -1,5 +1,7 @@
 import random
+import copy
 from .levelup import *
+from .buff import *
 
 dice = []
 for i in range(1, 100):
@@ -23,7 +25,7 @@ class Monster:
             self.damage = 6 * self.level
             self.hp = self.hp_max = 60 * self.level
             self.crit = 10 + (self.level / 2)
-            self.exp = 500 * self.level
+            self.exp = 50 * self.level
             self.gold = 50 * self.level
             self.pdef = 20
             self.mdef = 20
@@ -48,13 +50,15 @@ def fight(player, monster):
     print(f'Monster level {monster.level} encountered')
     while True:
         player.action = False
-        available_choices = {"1": "Attack", "2": "Magic", "3": "Flee"}
+        available_choices = {"1": "Attack", "2": "Magic", "3": "Status", "4": "Flee"}
         print("-" * 30)
         print(
             f'{player.name} -> HP: {player.hp}/{player.hp_max} | {player.resource.upper()}: {player.mana}/{player.mana_max}')
         print(f'MONSTER -> HP: {monster.hp}/{monster.hp_max} | Damage: {monster.damage}')
         print("-" * 30)
-        choice = input("Choose an action (1-Attack|2-Magic|3-Flee): ").capitalize()
+        for num,text in available_choices.items():
+            print(f"{num}-{text}", end=' | ')
+        choice = input("Choose an action: ").capitalize()
 
         if choice in available_choices or choice in available_choices.values():
             choice = available_choices.get(choice, choice)
@@ -64,7 +68,9 @@ def fight(player, monster):
                     player.action = True
                 case '2' | 'Magic':
                     use_magic(player, monster)
-                case '3' | 'Flee':
+                case '3' | 'Status':
+                    player.status_battle()
+                case '4' | 'Flee':
                     if monster.status == 'boss':
                         print('You cannot flee')
                     else:
@@ -83,6 +89,7 @@ def fight(player, monster):
                     player.mana = player.mana_max
                 elif player.class_name == 'Warrior':
                     player.mana = 0
+                buff_end_battle(player)
                 break
             else:
                 monster_attacks(player, monster)
@@ -93,8 +100,10 @@ def fight(player, monster):
                         player.mana = player.mana_max
                     elif player.class_name == 'Warrior':
                         player.mana = 0
+                    buff_end_battle(player)
                     break
                 regen(player)
+                buff_time(player)
 
         if player.hp <= 0:
             player.alive = False
@@ -139,11 +148,11 @@ def attack(player, monster):
 
     match player.class_name:
         case 'Warrior' | 'Paladin':
-            damage = round(player.strength * (1 - (monster.pdef / 100)))
+            damage = round(player.str * (1 - (monster.pdef / 100)))
         case 'Mage':
-            damage = round(player.intelligence * (1 - (monster.mdef / 100)))
+            damage = round(player.int * (1 - (monster.mdef / 100)))
         case 'Rogue':
-            damage = round(player.dexterity * (1 - (monster.pdef / 100)))
+            damage = round(player.dex * (1 - (monster.pdef / 100)))
 
     if crit_check:
         print("Critical damage!")
@@ -178,9 +187,11 @@ def use_magic(player, monster):
             print(f"{num} - {magic} ->",
                   " | ".join(f"{attribute}:{description}" for attribute, description in attributes.items()))
 
-        choice = input('Choose a magic ("S" or "Exit"): ').capitalize()
-        if choice == 'Exit' or choice == 'S':
+        choice = input('Choose a magic ("E" or "Exit"): ').capitalize()
+        if choice == 'Exit' or choice == 'E':
             break
+        elif choice.strip() == '':
+            print('Unavailable option')
         elif choice.title() in player.magics.keys() or int(choice) in magic_list:
             if choice.isdigit():
                 choice = magic_list[int(choice)]
@@ -194,12 +205,12 @@ def use_magic(player, monster):
                     total = player.magics[choice]["damage"]
                     for attribute in player.magics[choice]["tooltip"]:
                         match attribute:
-                            case 'strength':
-                                tooltip += player.strength
-                            case 'dexterity':
-                                tooltip += player.dexterity
-                            case 'intelligence':
-                                tooltip += player.intelligence
+                            case 'str':
+                                tooltip += player.str
+                            case 'dex':
+                                tooltip += player.dex
+                            case 'int':
+                                tooltip += player.int
                     total *= tooltip
                     if player.magics[choice]['type'] == 'physical':
                         total = round(total * (1 - (monster.pdef / 100)))
@@ -233,12 +244,12 @@ def use_magic(player, monster):
                     total = player.magics[choice][player.resource]
                     for attribute in player.magics[choice]["tooltip"]:
                         match attribute:
-                            case 'strength':
-                                tooltip += player.strength
-                            case 'dexterity':
-                                tooltip += player.dexterity
-                            case 'intelligence':
-                                tooltip += player.intelligence
+                            case 'str':
+                                tooltip += player.str
+                            case 'dex':
+                                tooltip += player.dex
+                            case 'int':
+                                tooltip += player.int
                     total *= tooltip
                     if player.crit != 0:
                         crit_check = critical_check(player)
@@ -252,6 +263,13 @@ def use_magic(player, monster):
                     if player.hp > player.hp_max:
                         player.hp = player.hp_max
                     print(f"You have {player.hp} HP left")
+
+                elif "buff" in player.magics[choice]['type']:
+                    buffstats = copy.deepcopy(player.magics[choice])
+                    buff_check(player,choice, buffstats)
+                    print(f'You use {choice} , granting: ', end='')
+                    buff_used(buffstats)
+
                 if player.magics[choice]['exp'][0] >= player.magics[choice]['exp'][1]:
                     levelup_magic(player, choice)
                 player.action = True
