@@ -6,13 +6,15 @@ def levelup(player):
             player.hp_max += 50
             player.hp = player.hp_max
             player.str += 3
+            player.hp_regen += 3
 
         case 'Mage':
             player.hp_max += 20
             player.hp = player.hp_max
-            player.mana_max += 50
+            player.mana_max += 100
             player.mana = player.mana_max
             player.int += 3
+            player.mana_regen += 3
 
         case 'Rogue':
             player.hp_max += 30
@@ -24,6 +26,7 @@ def levelup(player):
             player.hp = player.hp_max
             player.mana_max += 15
             player.mana = player.mana_max
+            player.mana_regen += 1
             if player.level % 2 == 0:
                 player.str += 2
                 player.int += 1
@@ -46,7 +49,10 @@ def levelup_magic(player, choice):
         player.magics[choice]['level'] += 1
         player.magics[choice]['damage'] += 1
         if 'mana' in player.magics[choice]:
-            player.magics[choice]['mana'] += 2
+            if 'Mage' in player.class_name:
+                player.magics[choice]['mana'] += 10
+            else:
+                player.magics[choice]['mana'] += 2
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -61,13 +67,29 @@ def levelup_magic(player, choice):
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
         print(f"Now it has {player.magics[choice]['heal']} base healing")
 
-    elif 'buff' in player.magics[choice]:
+    elif 'time' in player.magics[choice]:
         player.magics[choice]['level'] += 1
-        player.magics[choice]['mana'] += 2
-        if 'pdef' in player.magics[choice]:
-            player.magics[choice]['pdef'] += 1
-        if 'mdef' in player.magics[choice]:
-            player.magics[choice]['mdef'] += 1
+        for atribute in player.magics[choice]:
+            match atribute:
+                case 'mana':
+                    if 'Mage' in player.class_name:
+                        player.magics[choice]['mana'] += 10
+                    else:
+                        player.magics[choice]['mana'] += 2
+                case 'str':
+                    player.magics[choice]['str'] += 2
+                case 'dex':
+                    player.magics[choice]['dex'] += 2
+                case 'int':
+                    player.magics[choice]['int'] += 2
+                case 'dodge':
+                    player.magics[choice]['dodge'] += 1
+                case 'pdef':
+                    player.magics[choice]['pdef'] += 1
+                case 'mdef':
+                    player.magics[choice]['mdef'] += 1
+                case 'reduction':
+                    player.magics[choice]['reduction'] += 1
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -79,12 +101,21 @@ def gain_magic(player):
         case 'Mage':
             match player.level:
                 case 3:
-                    player.magics["Ice Arrow"] = {"level": 1,"type":"magic","mana": 15,"tooltip": ['int'],"damage": 7,"exp": [0,30]}
+                    player.magics["Ice Arrow"] = {"level": 1,"type":"magic","mana": 25,"tooltip": ['int'],"damage": 7,"exp": [0,30]}
                     print('%' * 30)
                     print('You learned the spell "ICE ARROW"')
                     print('%' * 30)
+                    player.magics["Mana Shield"] = {"level": 1, "type": "buff", "mana": 10,"reduction": 10,"time": 99, "exp": [0, 30]}
+                    print('%' * 30)
+                    print('You learned the spell "MANA SHIELD"')
+                    print('%' * 30)
                 case 5:
-                    player.magics["Inferno"] = {"level": 1,"type":"magic","mana": 50,"tooltip": ['int'],"damage": 15,"exp": [0,30]}
+                    player.magics["Arcane Amplification"] = {"level": 1, "type": "buff", "mana": 50, "int": 15,"time": 5, "exp": [0, 30]}
+                    print('%' * 30)
+                    print('You learned the spell "ARCANE AMPLIFICATION"')
+                    print('%' * 30)
+                case 5:
+                    player.magics["Inferno"] = {"level": 1,"type":"magic","mana": 100,"tooltip": ['int'],"damage": 15,"exp": [0,30]}
                     print('%' * 30)
                     print('You learned the spell "INFERNO"')
                     print('%' * 30)
@@ -113,6 +144,11 @@ def gain_magic(player):
                     print('You learned the spell "FIERCE STRIKE"')
                     print('%' * 30)
                 case 5:
+                    player.magics["Warcry"] = {"level": 1, "type": "buff", "rage": 20, "str": 10, "time": 5,"exp": [0, 30]}
+                    print('%' * 30)
+                    print('You learned the spell "WARCRY"')
+                    print('%' * 30)
+                case 7:
                     player.magics["Bloody Strike"] = {"level": 1,"type":"physical", "rage": 50, "tooltip": ['str'], "damage": 10,'bonus':'lifesteal',"exp": [0, 30]}
                     print('%' * 30)
                     print('You learned the spell "BLOODY STRIKE"')
@@ -125,6 +161,11 @@ def gain_magic(player):
                     print('You learned the spell "STAB"')
                     print('%' * 30)
                 case 5:
+                    player.magics["Vanish"] = {"level": 1, "type": "buff", "energy": 70, "dodge": 20,"time": 5, "exp": [0, 30]}
+                    print('%' * 30)
+                    print('You learned the spell "VANISH"')
+                    print('%' * 30)
+                case 7:
                     player.magics["Double Strike"] = {"level": 1,"type":"physical", "energy": 80, "tooltip": ['dex'], "damage": 10,"exp": [0, 30]}
                     print('%' * 30)
                     print('You learned the spell "DOUBLE STRIKE"')

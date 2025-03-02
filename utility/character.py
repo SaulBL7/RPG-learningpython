@@ -1,11 +1,11 @@
 attribute = {
             "Warrior": {"hp": 100, "rage": 100, "str": 12, "dex": 4, "int": 2, "crit": 5, "pdef": 20, "mdef": 0, "dodge": 0, "desc": "Deals a lot of physical damage with 'RAGE' mechanics, where he gains rage by dealing or receiving damage"},
-            "Mage": {"hp": 60, "mana": 100, "str": 2, "dex": 4, "int": 12, "crit": 5, "pdef": 0, "mdef": 20, "dodge": 5, "desc": "Deals a lot of magical damage"},
+            "Mage": {"hp": 60, "mana": 200, "str": 2, "dex": 4, "int": 12, "crit": 5, "pdef": 0, "mdef": 20, "dodge": 5, "desc": "Deals a lot of magical damage"},
             "Rogue": {"hp": 80, "energy": 100, "str": 3, "dex": 12, "int": 3, "crit": 30, "pdef": 0, "mdef": 0, "dodge": 20, "desc": "Deals physical damage with 'Energy' mechanics, gaining over time in battle, and when dodging an enemy attack, counterattacks"},
             "Paladin": {"hp": 100, "mana": 50, "str": 8, "dex": 2, "int": 8, "crit": 10, "pdef": 10, "mdef": 10, "dodge": 0, "desc": "Hybrid class with both physical and magical power"},
         }
 init_magics =  {
-            "Mage": {"Fireball": {"level": 1, "type": "magic", "mana": 10, "tooltip": ['int'], "damage": 4, "exp": [0, 30]}},
+            "Mage": {"Fireball": {"level": 1, "type": "magic", "mana": 15, "tooltip": ['int'], "damage": 4, "exp": [0, 30]}},
             "Warrior": {"Power Strike": {"level": 1, "type": "physical", "rage": 20, "tooltip": ['str'], "damage": 4, "exp": [0, 30]}},
             "Rogue": {"Backstab": {"level": 1, "type": "physical", "energy": 50, "tooltip": ['dex'], "damage": 3, "exp": [0, 30]}},
             "Paladin": {"Smite": {"level": 1, "type": "physical", "mana": 10, "tooltip": ['int', 'str'], "damage": 2, "exp": [0, 30]},
@@ -27,6 +27,8 @@ class Player:
         self.buffs = {}
         self.alive = True
         self.action = False
+        self.shield = None
+        self.reduction = 0
         self.hp_regen = 0
         self.mana_regen = 0
         self.exp_multi = 1
@@ -64,6 +66,7 @@ class Player:
         print('--------------------------------------------------------------------')
         print(f'Character: {self.name} | Class: {self.class_name} | Level: {self.level}')
         print(f'HP: {self.hp}/{self.hp_max} | {self.resource.capitalize()}: {self.mana}/{self.mana_max}')
+        print(f'HP Regen: {self.hp_regen} | {self.resource.capitalize()} regen: {self.mana_regen}')
         print(f'Strength: {self.str} | Dexterity: {self.dex} | Intelligence: {self.int}')
         print(f'Crit: {self.crit}% | P.DEF: {self.pdef}% | M.DEF: {self.mdef}% | Dodge: {self.dodge}%')
         print(f'EXP: {self.exp}/{self.exp_max} | Gold: {self.gold}')
@@ -107,13 +110,14 @@ class Player:
         print('--------------------------------------------------------------------')
         print(f'Character: {self.name} | Class: {self.class_name} | Level: {self.level}')
         print(f'HP: {self.hp}/{self.hp_max} | {self.resource.capitalize()}: {self.mana}/{self.mana_max}')
+        print(f'HP Regen: {self.hp_regen} | {self.resource.capitalize()} regen: {self.mana_regen}')
         print(f'Strength: {self.str} | Dexterity: {self.dex} | Intelligence: {self.int}')
         print(f'Crit: {self.crit}% | P.DEF: {self.pdef}% | M.DEF: {self.mdef}% | Dodge: {self.dodge}%')
         print('Buffs')
-        print('--------------------------------------------------------------------')
+        print('#'*80)
         for buff, attributes in self.buffs.items():
             print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
-        print('--------------------------------------------------------------------')
+        print('#'*80)
 
 def create_character():
     name = input('Enter your character\'s name: ').title()

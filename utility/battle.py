@@ -11,22 +11,22 @@ for i in range(1, 100):
 class Monster:
     def __init__(self, player, difficulty):
         match difficulty:
-            case 1:
+            case "1" | "Easy":
                 self.level = player.level
-            case 2:
+            case "2" | "Medium":
                 self.level = player.level + 1
-            case 3:
+            case "3" | "Hard":
                 self.level = player.level + random.randint(2, 3)
-            case 4:
+            case "4" | "Boss":
                 self.level = player.level + 5
 
         self.name = f"Monster {self.level}"
         if difficulty == 4:
             self.damage = 6 * self.level
-            self.hp = self.hp_max = 60 * self.level
+            self.hp = self.hp_max = 140 * self.level
             self.crit = 10 + (self.level / 2)
-            self.exp = 50 * self.level
-            self.gold = 50 * self.level
+            self.exp = 120 * self.level
+            self.gold = 100 * self.level
             self.pdef = 20
             self.mdef = 20
             self.status = 'boss'
@@ -83,24 +83,12 @@ def fight(player, monster):
 
         if player.action:
             if monster.hp <= 0:
-                print('Monster died')
-                exp_gold_gain(player, monster)
-                if player.class_name == 'Rogue':
-                    player.mana = player.mana_max
-                elif player.class_name == 'Warrior':
-                    player.mana = 0
-                buff_end_battle(player)
+                monster_death(player, monster)
                 break
             else:
                 monster_attacks(player, monster)
                 if monster.hp <= 0:
-                    print('Monster died')
-                    exp_gold_gain(player, monster)
-                    if player.class_name == 'Rogue':
-                        player.mana = player.mana_max
-                    elif player.class_name == 'Warrior':
-                        player.mana = 0
-                    buff_end_battle(player)
+                    monster_death(player, monster)
                     break
                 regen(player)
                 buff_time(player)
@@ -110,21 +98,25 @@ def fight(player, monster):
             print('You died')
             break
 
+def monster_death(player, monster):
+    print('Monster died')
+    exp_gold_gain(player, monster)
+    reset_player_mana(player)
+    buff_end_battle(player)
+
+
+def reset_player_mana(player):
+    if player.class_name == 'Rogue':
+        player.mana = player.mana_max
+    elif player.class_name == 'Warrior':
+        player.mana = 0
+
 
 def regen(player):
-    match player.class_name:
-        case 'Rogue':
-            player.mana += player.mana_regen
-            if player.mana > player.mana_max:
-                player.mana = player.mana_max
-        case 'Mage' | 'Paladin':
-            player.mana += player.mana_regen
-            if player.mana > player.mana_max:
-                player.mana = player.mana_max
-        case 'Warrior':
-            player.hp += player.hp_regen
-            if player.hp > player.hp_max:
-                player.hp = player.hp_max
+    if player.class_name in ['Rogue', 'Mage', 'Paladin']:
+        player.mana = min(player.mana + player.mana_regen, player.mana_max)
+    elif player.class_name == 'Warrior':
+        player.hp = min(player.hp + player.hp_regen, player.hp_max)
 
 
 def exp_gold_gain(player, monster):
@@ -159,16 +151,12 @@ def attack(player, monster):
         print(f"You dealt {damage * 2} damage")
         monster.hp -= damage * 2
         if player.class_name == 'Warrior':
-            player.mana += 10
-            if player.mana > player.mana_max:
-                player.mana = player.mana_max
+            player.mana = min(player.mana + 10, player.mana_max)
     else:
         print(f"You dealt {damage} damage")
         monster.hp -= damage
         if player.class_name == 'Warrior':
-            player.mana += 5
-            if player.mana > player.mana_max:
-                player.mana = player.mana_max
+            player.mana = min(player.mana + 5, player.mana_max)
 
     if monster.hp > 0:
         print(f"The monster has {monster.hp} HP left")
@@ -179,7 +167,6 @@ def use_magic(player, monster):
     while True:
         crit_check = False
         magic_list = {}
-        tooltip = 0
         print(f'You have {player.mana} {player.resource}')
 
         for num, (magic, attributes) in enumerate(player.magics.items(), start=1):
@@ -202,16 +189,7 @@ def use_magic(player, monster):
                 player.mana -= player.magics[choice][player.resource]
                 player.magics[choice]['exp'][0] += int(10 * round(player.exp_multi, 1))
                 if "damage" in player.magics[choice]:
-                    total = player.magics[choice]["damage"]
-                    for attribute in player.magics[choice]["tooltip"]:
-                        match attribute:
-                            case 'str':
-                                tooltip += player.str
-                            case 'dex':
-                                tooltip += player.dex
-                            case 'int':
-                                tooltip += player.int
-                    total *= tooltip
+                    total = magic_value(player, choice)
                     if player.magics[choice]['type'] == 'physical':
                         total = round(total * (1 - (monster.pdef / 100)))
                     elif player.magics[choice]['type'] == 'magic':
@@ -220,9 +198,7 @@ def use_magic(player, monster):
                         match player.magics[choice]['bonus']:
                             case 'lifesteal':
                                 print('You used a LIFESTEAL ability and will heal for the damage dealt')
-                                player.hp += total
-                                if player.hp > player.hp_max:
-                                    player.hp = player.hp_max
+                                player.hp = min(player.hp + total, player.hp_max)
                     if player.crit != 0:
                         crit_check = critical_check(player)
                     if crit_check:
@@ -235,40 +211,28 @@ def use_magic(player, monster):
                     if monster.hp > 0:
                         print(f"The monster has {monster.hp} HP left")
                     if player.class_name == 'Warrior':
-                        player.mana += 5
-                        if player.mana > player.mana_max:
-                            player.mana = player.mana_max
-
+                        player.mana = min(player.mana + 5, player.mana_max)
 
                 elif "heal" in player.magics[choice]:
-                    total = player.magics[choice][player.resource]
-                    for attribute in player.magics[choice]["tooltip"]:
-                        match attribute:
-                            case 'str':
-                                tooltip += player.str
-                            case 'dex':
-                                tooltip += player.dex
-                            case 'int':
-                                tooltip += player.int
-                    total *= tooltip
+                    total = magic_value(player, choice)
                     if player.crit != 0:
                         crit_check = critical_check(player)
                     if crit_check:
                         print("Critical heal!")
                         print(f"You healed {total * 2} HP")
-                        player.hp += total * 2
+                        player.hp = min(player.hp + (total * 2), player.hp_max)
                     else:
                         print(f"You healed {total} HP")
-                        player.hp += total
-                    if player.hp > player.hp_max:
-                        player.hp = player.hp_max
+                        player.hp = min(player.hp + total, player.hp_max)
                     print(f"You have {player.hp} HP left")
 
                 elif "buff" in player.magics[choice]['type']:
                     buffstats = copy.deepcopy(player.magics[choice])
                     buff_check(player,choice, buffstats)
-                    print(f'You use {choice} , granting: ', end='')
+                    print('@' * 60)
+                    print(f'You use {choice.upper()} , granting: ', end='')
                     buff_used(buffstats)
+                    print('@' * 60)
 
                 if player.magics[choice]['exp'][0] >= player.magics[choice]['exp'][1]:
                     levelup_magic(player, choice)
@@ -276,6 +240,24 @@ def use_magic(player, monster):
                 break
         else:
             print('Unavailable option')
+
+def magic_value(player, choice):
+    tooltip = 0
+    total = 0
+    if 'damage' in player.magics[choice]:
+        total = player.magics[choice]["damage"]
+    elif 'heal' in player.magics[choice]:
+        total = player.magics[choice]["heal"]
+    for attribute in player.magics[choice]["tooltip"]:
+        match attribute:
+            case 'str':
+                tooltip += player.str
+            case 'dex':
+                tooltip += player.dex
+            case 'int':
+                tooltip += player.int
+    total *= tooltip
+    return total
 
 
 def monster_attacks(player, monster):
@@ -288,12 +270,12 @@ def monster_attacks(player, monster):
         crit_check = critical_check(monster)
         damage = round(monster.damage * (1 - (player.pdef / 100)))
         if crit_check:
+            final_damage = damage * 2
             print('\nYou received Critical Damage!')
-            print(f"The monster dealt {damage * 2} damage to you")
-            player.hp -= damage * 2
+            shield_block(player, final_damage)
         else:
-            print(f"\nThe monster dealt {damage} damage to you")
-            player.hp -= damage
+            print()
+            shield_block(player, damage)
         if player.hp > 0:
             print(f'You have {player.hp} HP left')
 
@@ -302,24 +284,41 @@ def monster_attacks(player, monster):
                 player.mana += 5
             else:
                 if int(damage / 10) > 20:
-                    player.mana += 20
+                    player.mana = min(player.mana + 20, player.mana_max)
                 else:
-                    player.mana += int(damage / 10)
-                if player.mana > player.mana_max:
-                    player.mana = player.mana_max
+                    player.mana = min(player.mana + round(damage / 10), player.mana_max)
+
+def shield_block(player, damage):
+    if player.shield == 'Mana Shield':
+        reduc = player.magics['Mana Shield']['reduction']
+        final_damage = damage * round(1-(reduc/100))
+        if player.mana < final_damage:
+            print(f"The monster dealt {player.mana} damage to you remaining mana", end=', ')
+            player.mana -= final_damage
+            leftover_damage = abs(player.mana)
+            print(f'and dealt {leftover_damage} to you hp')
+            player.mana = max(player.mana, 0)
+            player.hp -= leftover_damage
+            desactive_mana_shield(player)
+        else:
+            print(f"The monster dealt {final_damage} damage to you mana")
+            player.mana -= final_damage
+
+    else:
+        print(f"The monster dealt {damage} damage to you hp")
+        player.hp -= damage
+
 
 
 def critical_check(npc):
-    if npc.crit > random.choice(dice):
-        return True
-    else:
-        return False
+    return npc.crit > random.choice(dice)
 
 
 def flee(player):
     escape = 50 + player.dodge
     if escape >= random.choice(dice):
         print('You fled successfully')
+        buff_end_battle(player)
         return True
     else:
         print('You failed to escape')

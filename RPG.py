@@ -32,18 +32,8 @@ def main():
             case '4' | 'Battleground':
                 difficulty_list = {"1": "Easy", "2": "Medium", "3": "Hard", "4": "Boss"}
                 difficulty = input('Choose the difficulty: (1-Easy | 2-Medium | 3-Hard | 4-Boss): ')
-                if difficulty.isdigit() and difficulty in difficulty_list.keys():
-                    difficulty = int(difficulty)
-                    if difficulty == 4:
-                        choice = input('You won\'t be able to flee from the battle, do you really want to face a boss? [Y]').upper()
-                        if choice == 'Y':
-                            start_battle(player, difficulty)
-                    else:
-                        start_battle(player, difficulty)
-                elif difficulty.capitalize() in difficulty_list.values():
-                    key = [key for key, value in difficulty_list.items() if value == difficulty.capitalize()][0]
-                    difficulty = int(key)
-                    if difficulty == 4:
+                if difficulty.capitalize() in difficulty_list.values() or difficulty in difficulty_list.keys():
+                    if difficulty == "4" or difficulty == "Boss":
                         choice = input('You won\'t be able to flee from the battle, do you really want to face a boss? [Y]').upper()
                         if choice == 'Y':
                             start_battle(player, difficulty)
