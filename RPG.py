@@ -1,10 +1,31 @@
-from utility.character import  *
 from utility.shop import *
 from utility.battle import *
+from utility.file_manager import *
+from utility.character import *
+
 
 def main():
-    player = create_character()
-    city = {'1':'Status', '2':'Inn', '3':'Shop', '4':'Battleground', '9':'Quit'}
+    while True:
+        menu = {'1': 'New game', '2': 'Load game'}
+        for num, option in menu.items():
+            print(f'{num} - {option}')
+        choice = input('Choose an option: ').lower()
+
+        match choice:
+            case '1' | 'new game':
+                player = create_character()
+                break
+            case '2' | 'load game':
+                player = files_load()
+                if player:
+                    break
+            case _:
+                print("Invalid option, please try again.")
+    return player
+
+def city(player):
+
+    city = {'1':'Status', '2':'Inn', '3':'Shop', '4':'Battleground','8':'Save game','9':'Quit'}
     while player.alive:
         for num, option in city.items():
             print(f'{num} - {option}')
@@ -41,7 +62,8 @@ def main():
                         start_battle(player, difficulty)
                 else:
                     print('Difficulty not found')
-
+            case '8' | 'Save game':
+                save_game(player)
             case '9' | 'Quit':
                 print("Exiting the game...")
                 break
@@ -49,6 +71,7 @@ def main():
                 print("Invalid option, please try again.")
 
 if __name__ == "__main__":
-    main()
+    player = main()
+    city(player)
 
 

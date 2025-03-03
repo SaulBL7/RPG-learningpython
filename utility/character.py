@@ -1,3 +1,5 @@
+import json
+
 attribute = {
             "Warrior": {"hp": 100, "rage": 100, "str": 12, "dex": 4, "int": 2, "crit": 5, "pdef": 20, "mdef": 0, "dodge": 0, "desc": "Deals a lot of physical damage with 'RAGE' mechanics, where he gains rage by dealing or receiving damage"},
             "Mage": {"hp": 60, "mana": 200, "str": 2, "dex": 4, "int": 12, "crit": 5, "pdef": 0, "mdef": 20, "dodge": 5, "desc": "Deals a lot of magical damage"},
@@ -118,6 +120,18 @@ class Player:
         for buff, attributes in self.buffs.items():
             print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
         print('#'*80)
+
+    @classmethod
+    def load_game(cls, name):
+        location = f'saves/{name}.json'
+        with open(location, 'r') as file:
+            data = json.load(file)
+
+        player = cls(data['name'], data['class_name'])
+
+        for atribute, value in data.items():
+            setattr(player, atribute, value)
+        return player
 
 def create_character():
     name = input('Enter your character\'s name: ').title()

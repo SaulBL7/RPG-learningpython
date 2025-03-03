@@ -1,0 +1,90 @@
+{
+    "name": "Magus",
+    "class_name": "Mage",
+    "level": 4,
+    "exp": 1,
+    "exp_max": 220,
+    "gold": 150,
+    "weapon": {
+        "Staff": {
+            "int": 5,
+            "crit": 5,
+            "gold": 50
+        }
+    },
+    "armor": {
+        "Cloak": {
+            "hp": 20,
+            "mana": 100,
+            "int": 5,
+            "dodge": 5,
+            "mdef": 20,
+            "gold": 100
+        }
+    },
+    "trinket": {
+        "INT Ring": {
+            "int": 5,
+            "gold": 300
+        }
+    },
+    "buffs": {},
+    "alive": true,
+    "action": true,
+    "shield": "Mana Shield",
+    "reduction": 0,
+    "hp_regen": 0,
+    "mana_regen": 19,
+    "exp_multi": 1,
+    "hp": 140,
+    "hp_max": 140,
+    "mana": 600,
+    "mana_max": 600,
+    "resource": "mana",
+    "str": 2,
+    "dex": 4,
+    "int": 36,
+    "crit": 10,
+    "dodge": 10,
+    "pdef": 0,
+    "mdef": 40,
+    "magics": {
+        "Fireball": {
+            "level": 3,
+            "type": "magic",
+            "mana": 35,
+            "tooltip": [
+                "int"
+            ],
+            "damage": 6,
+            "exp": [
+                40,
+                60
+            ]
+        },
+        "Ice Arrow": {
+            "level": 1,
+            "type": "magic",
+            "mana": 25,
+            "tooltip": [
+                "int"
+            ],
+            "damage": 7,
+            "exp": [
+                20,
+                30
+            ]
+        },
+        "Mana Shield": {
+            "level": 1,
+            "type": "buff",
+            "mana": 10,
+            "reduction": 10,
+            "time": 99,
+            "exp": [
+                10,
+                30
+            ]
+        }
+    }
+}
