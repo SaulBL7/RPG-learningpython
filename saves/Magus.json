@@ -2,9 +2,9 @@
     "name": "Magus",
     "class_name": "Mage",
     "level": 4,
-    "exp": 1,
+    "exp": 101,
     "exp_max": 220,
-    "gold": 150,
+    "gold": 300,
     "weapon": {
         "Staff": {
             "int": 5,
@@ -31,14 +31,14 @@
     "buffs": {},
     "alive": true,
     "action": true,
-    "shield": "Mana Shield",
+    "shield": null,
     "reduction": 0,
     "hp_regen": 0,
     "mana_regen": 19,
     "exp_multi": 1,
     "hp": 140,
     "hp_max": 140,
-    "mana": 600,
+    "mana": 534,
     "mana_max": 600,
     "resource": "mana",
     "str": 2,
@@ -58,7 +58,7 @@
             ],
             "damage": 6,
             "exp": [
-                40,
+                50,
                 60
             ]
         },
@@ -82,7 +82,7 @@
             "reduction": 10,
             "time": 99,
             "exp": [
-                10,
+                20,
                 30
             ]
         }

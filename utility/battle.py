@@ -100,6 +100,8 @@ def fight(player, monster):
 
 def monster_death(player, monster):
     print('Monster died')
+    if player.class_name == 'Mage':
+        desactive_mana_shield(player)
     exp_gold_gain(player, monster)
     reset_player_mana(player)
     buff_end_battle(player)
