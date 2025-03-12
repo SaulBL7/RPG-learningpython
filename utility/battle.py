@@ -21,19 +21,19 @@ class Monster:
                 self.level = player.level + 5
 
         self.name = f"Monster {self.level}"
-        if difficulty == 4:
+        if difficulty in ['4','Boss']:
             self.damage = 6 * self.level
             self.hp = self.hp_max = 140 * self.level
-            self.crit = 10 + (self.level / 2)
+            self.crit = min(50, 10 + round(self.level))
             self.exp = 120 * self.level
             self.gold = 100 * self.level
             self.pdef = 20
-            self.mdef = 20
+            self.mdef = 40
             self.status = 'boss'
         else:
             self.damage = 4 * self.level
             self.hp = self.hp_max = 40 * self.level
-            self.crit = 10 * (self.level / 2)
+            self.crit = min(50, 10 + round(self.level / 2))
             self.exp = 20 * self.level
             self.gold = 30 * self.level
             self.pdef = 0
@@ -122,7 +122,7 @@ def regen(player):
 
 
 def exp_gold_gain(player, monster):
-    print(f'You received {monster.exp} exp and {monster.gold} gold')
+    print(f'You received {monster.exp} exp and {monster.gold} gold\n')
     player.gold += monster.gold
     player.exp += int(monster.exp * round(player.exp_multi, 1))
     while True:

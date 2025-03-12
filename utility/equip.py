@@ -28,11 +28,12 @@ def equip_weapon(player, new_weapon, stats):
                 player.crit += value
             case 'exp':
                 player.exp_multi += value - 1
-
+    print('@'* 40)
     print(f'Weapon equipped: {new_weapon}')
     print(f'HP: {player.hp}/{player.hp_max} | {player.resource.upper()}: {player.mana}/{player.mana_max}')
     print(f'Strength: {player.str} | Dexterity: {player.dex} | Intelligence: {player.int}')
     print(f'Critical: {player.crit}% | PDEF: {player.pdef}% | MDEF: {player.mdef}% | Dodge: {player.dodge}%')
+    print('@' * 40)
 
 def equip_armor(player, new_armor, stats):
     if player.armor != {}:
@@ -91,10 +92,12 @@ def equip_armor(player, new_armor, stats):
             case 'exp':
                 player.exp_multi += value - 1
 
+    print('@' * 40)
     print(f'Armor equipped: {new_armor}')
     print(f'HP: {player.hp}/{player.hp_max} | {player.resource.upper()}: {player.mana}/{player.mana_max}')
     print(f'Strength: {player.str} | Dexterity: {player.dex} | Intelligence: {player.int}')
     print(f'Critical: {player.crit}% | PDEF: {player.pdef}% | MDEF: {player.mdef}% | Dodge: {player.dodge}%')
+    print('@' * 40)
 
 def equip_trinket(player, new_trinket, stats):
     if player.trinket != {}:
@@ -146,8 +149,9 @@ def equip_trinket(player, new_trinket, stats):
                 value -= 1
                 player.exp_multi += value
 
+    print('@' * 40)
     print(f'Trinket equipped: {new_trinket}')
     print(f'HP: {player.hp}/{player.hp_max} | {player.resource.upper()}: {player.mana}/{player.mana_max}')
     print(f'Strength: {player.str} | Dexterity: {player.dex} | Intelligence: {player.int}')
     print(f'Critical: {player.crit}% | PDEF: {player.pdef}% | MDEF: {player.mdef}% | Dodge: {player.dodge}%')
-
+    print('@' * 40)

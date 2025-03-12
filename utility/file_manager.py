@@ -18,7 +18,9 @@ def save_game(player):
         if choice.upper() == 'Y' or choice.upper() == 'Yes':
             with open(location, 'w') as file:
                 json.dump(vars(player), file, ensure_ascii=False, indent=4)
+            print('@' * 50)
             print(f"File '{name}' overwrited successfully!")
+            print('@' * 50)
 
 def files_load():
     files =[]

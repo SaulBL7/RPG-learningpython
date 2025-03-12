@@ -50,9 +50,9 @@ def levelup_magic(player, choice):
         player.magics[choice]['damage'] += 1
         if 'mana' in player.magics[choice]:
             if 'Mage' in player.class_name:
-                player.magics[choice]['mana'] += 10
+                player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.4)
             else:
-                player.magics[choice]['mana'] += 2
+                player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.2)
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -61,7 +61,7 @@ def levelup_magic(player, choice):
     elif 'heal' in player.magics[choice]:
         player.magics[choice]['level'] += 1
         player.magics[choice]['heal'] += 1
-        player.magics[choice]['mana'] += 2
+        player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.2)
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -72,10 +72,7 @@ def levelup_magic(player, choice):
         for atribute in player.magics[choice]:
             match atribute:
                 case 'mana':
-                    if 'Mage' in player.class_name:
-                        player.magics[choice]['mana'] += 10
-                    else:
-                        player.magics[choice]['mana'] += 2
+                    player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.1)
                 case 'str':
                     player.magics[choice]['str'] += 2
                 case 'dex':
@@ -101,7 +98,7 @@ def gain_magic(player):
         case 'Mage':
             match player.level:
                 case 3:
-                    player.magics["Ice Arrow"] = {"level": 1,"type":"magic","mana": 25,"tooltip": ['int'],"damage": 7,"exp": [0,30]}
+                    player.magics["Ice Arrow"] = {"level": 1,"type":"magic","mana": 45,"tooltip": ['int'],"damage": 7,"exp": [0,30]}
                     print('%' * 30)
                     print('You learned the spell "ICE ARROW"')
                     print('%' * 30)
@@ -114,11 +111,12 @@ def gain_magic(player):
                     print('%' * 30)
                     print('You learned the spell "ARCANE AMPLIFICATION"')
                     print('%' * 30)
-                case 5:
-                    player.magics["Inferno"] = {"level": 1,"type":"magic","mana": 100,"tooltip": ['int'],"damage": 15,"exp": [0,30]}
+                case 7:
+                    player.magics["Inferno"] = {"level": 1,"type":"magic","mana": 200,"tooltip": ['int'],"damage": 13,"exp": [0,30]}
                     print('%' * 30)
                     print('You learned the spell "INFERNO"')
                     print('%' * 30)
+
         case 'Paladin':
             match player.level:
                 case 3:

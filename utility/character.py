@@ -72,6 +72,8 @@ class Player:
         print(f'Strength: {self.str} | Dexterity: {self.dex} | Intelligence: {self.int}')
         print(f'Crit: {self.crit}% | P.DEF: {self.pdef}% | M.DEF: {self.mdef}% | Dodge: {self.dodge}%')
         print(f'EXP: {self.exp}/{self.exp_max} | Gold: {self.gold}')
+        print('--------------------------------------------------------------------')
+        print('EQUIPS:')
         if self.weapon == {}:
             print('Weapon: None equipped')
         else:
@@ -99,14 +101,11 @@ class Player:
                 if stats != 'gold':
                     print(f' {stats.upper()} : {value}', end='  |  ')
         print('\n--------------------------------------------------------------------')
-        print('Spells')
+        print('SPELLS:')
         for spell, attributes in self.magics.items():
             print(f"{spell} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
         print('--------------------------------------------------------------------')
-        print('Spells')
-        for buff, attributes in self.buffs.items():
-            print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
-        print('--------------------------------------------------------------------')
+
 
     def status_battle(self):
         print('--------------------------------------------------------------------')
@@ -118,7 +117,7 @@ class Player:
         print('Buffs')
         print('#'*80)
         for buff, attributes in self.buffs.items():
-            print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items()))
+            print(f"{buff} ->", " | ".join(f"{attribute}: {descr}" for attribute, descr in attributes.items() if attribute != 'exp'))
         print('#'*80)
 
     @classmethod
@@ -147,7 +146,7 @@ def create_character():
         if choice in available_classes or choice in available_classes.values():
             selected_class = available_classes.get(choice, choice)
             print(f"{attribute[selected_class]['desc']}")
-            confirmation = input(f"Confirm selection as '{selected_class}'? (Y/N) ").strip().upper()
+            confirmation = input(f"Confirm selection as '{selected_class}'? [Y] ").strip().upper()
             if confirmation == 'Y':
                 return Player(name, selected_class)
         else:
