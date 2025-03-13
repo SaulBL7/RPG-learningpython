@@ -1,12 +1,9 @@
-buffs_time = {'Bastian': 5,'Warcry': 5,'Vanish': 5, 'Arcane Amplification':5, 'Mana Shield': 99}
-
-
 def buff_check(player,choice,stats):
     if choice in player.buffs:
-        player.buffs[choice]['time'] = buffs_time.get(choice)
-    else:
-        player.buffs[choice] = stats
-        buff_plus(player, player.buffs[choice])
+        remove_buffs = [choice]
+        buff_minus(player, remove_buffs)
+    player.buffs[choice] = stats
+    buff_plus(player, player.buffs[choice])
     if choice == 'Mana Shield':
         active_shield(player, choice)
 
@@ -43,12 +40,13 @@ def buff_minus(player,remove_buffs):
 def buff_time(player):
     remove_buffs = []
     for buff in player.buffs:
-        player.buffs[buff]['time'] -= 1
-        if player.buffs[buff]['time'] == 0:
-            print('@' * 60)
-            print(f'{buff.upper()} effect is over')
-            print('@' * 60)
-            remove_buffs.append(buff)
+        if 'time' in player.buffs[buff]:
+            player.buffs[buff]['time'] -= 1
+            if player.buffs[buff]['time'] == 0:
+                print('@' * 60)
+                print(f'{buff.upper()} effect is over')
+                print('@' * 60)
+                remove_buffs.append(buff)
     buff_minus(player, remove_buffs)
 
 def buff_end_battle(player):

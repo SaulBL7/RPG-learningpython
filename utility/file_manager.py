@@ -37,9 +37,10 @@ def files_load():
         load = choice
         player = Player.load_game(load)
         return player
-    elif int(choice) in allfiles.keys():
-        load = allfiles[int(choice)]
-        player = Player.load_game(load)
-        return player
+    elif choice.isdigit():
+        if int(choice) in allfiles.keys():
+            load = allfiles[int(choice)]
+            player = Player.load_game(load)
+            return player
     else:
         print('File not found')

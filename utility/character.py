@@ -14,6 +14,7 @@ init_magics =  {
                         "Heal": {"level": 1, "mana": 10, "tooltip": ['int'], "heal": 3, "exp": [0, 30]}}
         }
 
+item_order = ['hp','hp_regen','mana_regen','mana','str','int','dex','dodge','pdef','mdef','crit']
 
 class Player:
     def __init__(self, name, class_name):
@@ -22,7 +23,7 @@ class Player:
         self.level = 1
         self.exp = 0
         self.exp_max = 100
-        self.gold = 0
+        self.gold = 100
         self.weapon = {}
         self.armor = {}
         self.trinket = {}
@@ -78,7 +79,8 @@ class Player:
             print('Weapon: None equipped')
         else:
             item = list(self.weapon.keys())[0]
-            print(f'Weapon: {item}', end='->')
+            print(f'Weapon: {item} ', end='-> ')
+            self.weapon[item] = {stats: self.weapon[item][stats] for stats in item_order if stats in self.weapon[item]}
             for stats, value in self.weapon[item].items():
                 if stats != 'gold':
                     print(f' {stats.upper()} : {value}', end='  |  ')
@@ -87,7 +89,8 @@ class Player:
             print('Armor: None equipped')
         else:
             item = list(self.armor.keys())[0]
-            print(f'Armor: {item}', end='->')
+            print(f'Armor: {item} ', end='-> ')
+            self.armor[item] = {stats: self.armor[item][stats] for stats in item_order if stats in self.armor[item]}
             for stats, value in self.armor[item].items():
                 if stats != 'gold':
                     print(f' {stats.upper()} : {value}', end='  |  ')
@@ -96,7 +99,8 @@ class Player:
             print('Accessory: None equipped')
         else:
             item = list(self.trinket.keys())[0]
-            print(f'Accessory: {item}', end='->')
+            print(f'Accessory: {item} ', end='-> ')
+            self.trinket[item] = {stats: self.trinket[item][stats] for stats in item_order if stats in self.trinket[item]}
             for stats, value in self.trinket[item].items():
                 if stats != 'gold':
                     print(f' {stats.upper()} : {value}', end='  |  ')

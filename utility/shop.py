@@ -30,7 +30,7 @@ def weapon_shop(player):
                   }
     while True:
         choice, choice_list = description(weapon_list)
-        if choice == 'Exit' or choice == 'E':
+        if choice.capitalize() == 'Exit' or choice.upper() == 'E':
             break
         if choice.isdigit():
             choice = int(choice)
@@ -70,7 +70,7 @@ def armor_shop(player):
                  }
     while True:
         choice, choice_list = description(armor_list)
-        if choice == 'Exit' or choice == 'E':
+        if choice.capitalize() == 'Exit' or choice.upper() == 'E':
             break
         if choice.isdigit():
             choice = int(choice)
@@ -109,7 +109,7 @@ def accessory_shop(player):
                      }
     while True:
         choice, choice_list = description(accessory_list)
-        if choice == 'Exit' or choice == 'E':
+        if choice.capitalize() == 'Exit' or choice.upper() == 'E':
             break
         if choice.isdigit():
             choice = int(choice)

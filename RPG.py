@@ -2,6 +2,7 @@ from utility.shop import *
 from utility.battle import *
 from utility.file_manager import *
 from utility.character import *
+from utility.enchant import *
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
 
 def city(player):
 
-    city = {'1':'Status', '2':'Inn', '3':'Shop', '4':'Battleground','8':'Save game','9':'Quit'}
+    city = {'1':'Status', '2':'Inn', '3':'Shop','4':'Item Enchanter', '5':'Battleground','8':'Save game','9':'Quit'}
     while player.alive:
         for num, option in city.items():
             print(f'{num} - {option}')
@@ -36,12 +37,12 @@ def city(player):
                 player.status()
 
             case '2' | 'Inn':
-                choice = input(f"Do you want to pay 20 gold to recover (Y)? GOLD: {player.gold} ")
+                choice = input(f"Do you want to pay {player.level * 20} gold to recover (Y)? GOLD: {player.gold} ")
                 if choice.upper() == 'Y':
-                    if player.gold < 20:
+                    if player.gold < (player.level * 20):
                         print('Not enough gold to pay')
                     else:
-                        player.gold -= 20
+                        player.gold -= (player.level * 20)
                         print('\nYou visited the local inn and recovered from your wounds')
                         player.hp = player.hp_max
                         if player.class_name == 'Mage' or player.class_name == 'Paladin':
@@ -50,7 +51,10 @@ def city(player):
             case '3' | 'Shop':
                 shop(player)
 
-            case '4' | 'Battleground':
+            case '4' | 'Item Enchanter':
+                item_enchant(player)
+
+            case '5' | 'Battleground':
                 difficulty_list = {"1": "Easy", "2": "Medium", "3": "Hard", "4": "Boss"}
                 difficulty = input('Choose the difficulty: (1-Easy | 2-Medium | 3-Hard | 4-Boss): ')
                 if difficulty.capitalize() in difficulty_list.values() or difficulty in difficulty_list.keys():
@@ -62,11 +66,14 @@ def city(player):
                         start_battle(player, difficulty)
                 else:
                     print('Difficulty not found')
+
             case '8' | 'Save game':
                 save_game(player)
+
             case '9' | 'Quit':
                 print("Exiting the game...")
                 break
+
             case _:
                 print("Invalid option, please try again.")
 

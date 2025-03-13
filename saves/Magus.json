@@ -1,15 +1,15 @@
 {
     "name": "Magus",
     "class_name": "Mage",
-    "level": 9,
-    "exp": 50,
-    "exp_max": 818,
-    "gold": 2330,
+    "level": 8,
+    "exp": 279,
+    "exp_max": 629,
+    "gold": 1010,
     "weapon": {
-        "Staff": {
+        "Enchanted Staff": {
             "int": 5,
             "crit": 5,
-            "gold": 50
+            "dodge": 5
         }
     },
     "armor": {
@@ -18,14 +18,12 @@
             "mana": 100,
             "int": 5,
             "dodge": 5,
-            "mdef": 20,
-            "gold": 100
+            "mdef": 20
         }
     },
     "trinket": {
         "INT Ring": {
-            "int": 5,
-            "gold": 300
+            "int": 5
         }
     },
     "buffs": {},
@@ -34,18 +32,18 @@
     "shield": null,
     "reduction": 0,
     "hp_regen": 0,
-    "mana_regen": 34,
+    "mana_regen": 31,
     "exp_multi": 1,
-    "hp": 240,
-    "hp_max": 240,
-    "mana": 1100,
-    "mana_max": 1100,
+    "hp": 220,
+    "hp_max": 220,
+    "mana": 943,
+    "mana_max": 1000,
     "resource": "mana",
     "str": 2,
     "dex": 4,
-    "int": 51,
+    "int": 48,
     "crit": 10,
-    "dodge": 10,
+    "dodge": 15,
     "pdef": 0,
     "mdef": 40,
     "magics": {
@@ -58,32 +56,31 @@
             ],
             "damage": 8,
             "exp": [
-                60,
+                30,
                 130
             ]
         },
         "Ice Arrow": {
-            "level": 2,
+            "level": 1,
             "type": "magic",
-            "mana": 63,
+            "mana": 45,
             "tooltip": [
                 "int"
             ],
-            "damage": 8,
+            "damage": 7,
             "exp": [
-                20,
-                40
+                0,
+                30
             ]
         },
         "Mana Shield": {
-            "level": 2,
+            "level": 1,
             "type": "buff",
-            "mana": 11,
-            "reduction": 11,
-            "time": 99,
+            "mana": 10,
+            "reduction": 10,
             "exp": [
-                0,
-                40
+                20,
+                30
             ]
         },
         "Arcane Amplification": {

@@ -47,12 +47,12 @@ def levelup_magic(player, choice):
     print('#' * 30)
     if 'damage' in player.magics[choice]:
         player.magics[choice]['level'] += 1
-        player.magics[choice]['damage'] += 1
+        player.magics[choice]['damage'] += max(1, round(player.magics[choice]['damage'] * 0.1))
         if 'mana' in player.magics[choice]:
             if 'Mage' in player.class_name:
-                player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.4)
+                player.magics[choice]['mana'] += min(40,round(player.magics[choice]['mana'] * 0.4))
             else:
-                player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.2)
+                player.magics[choice]['mana'] += min(20,round(player.magics[choice]['mana'] * 0.2))
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -60,25 +60,25 @@ def levelup_magic(player, choice):
 
     elif 'heal' in player.magics[choice]:
         player.magics[choice]['level'] += 1
-        player.magics[choice]['heal'] += 1
-        player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.2)
+        player.magics[choice]['heal'] += max(1, round(player.magics[choice]['heal'] * 0.1))
+        player.magics[choice]['mana'] += min(20,round(player.magics[choice]['mana'] * 0.2))
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
         print(f"Now it has {player.magics[choice]['heal']} base healing")
 
-    elif 'time' in player.magics[choice]:
+    elif 'buff' in player.magics[choice]['type']:
         player.magics[choice]['level'] += 1
         for atribute in player.magics[choice]:
             match atribute:
                 case 'mana':
-                    player.magics[choice]['mana'] += round(player.magics[choice]['mana'] * 0.1)
+                    player.magics[choice]['mana'] += min(10, round(player.magics[choice]['mana'] * 0.1))
                 case 'str':
-                    player.magics[choice]['str'] += 2
+                    player.magics[choice]['str'] += min(4, round(player.magics[choice]['str'] * 0.2))
                 case 'dex':
-                    player.magics[choice]['dex'] += 2
+                    player.magics[choice]['dex'] += min(4, round(player.magics[choice]['dex'] * 0.2))
                 case 'int':
-                    player.magics[choice]['int'] += 2
+                    player.magics[choice]['int'] += min(4, round(player.magics[choice]['int'] * 0.2))
                 case 'dodge':
                     player.magics[choice]['dodge'] += 1
                 case 'pdef':
@@ -87,6 +87,9 @@ def levelup_magic(player, choice):
                     player.magics[choice]['mdef'] += 1
                 case 'reduction':
                     player.magics[choice]['reduction'] += 1
+                case 'time':
+                    if player.magics[choice]['level'] % 3 == 0:
+                        player.magics[choice]['time'] += 1
         player.magics[choice]['exp'][0] -= player.magics[choice]['exp'][1]
         player.magics[choice]['exp'][1] += 10 * (player.magics[choice]['level'] - 1 )
         print(f"Your spell {choice} leveled up to level {player.magics[choice]['level']}")
@@ -102,7 +105,7 @@ def gain_magic(player):
                     print('%' * 30)
                     print('You learned the spell "ICE ARROW"')
                     print('%' * 30)
-                    player.magics["Mana Shield"] = {"level": 1, "type": "buff", "mana": 10,"reduction": 10,"time": 99, "exp": [0, 30]}
+                    player.magics["Mana Shield"] = {"level": 1, "type": "buff", "mana": 10,"reduction": 10,"exp": [0, 30]}
                     print('%' * 30)
                     print('You learned the spell "MANA SHIELD"')
                     print('%' * 30)
