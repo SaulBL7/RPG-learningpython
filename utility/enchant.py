@@ -2,21 +2,21 @@ import random
 from .equip import *
 
 attributes = ['hp','hp_regen','mana_regen','mana','str','int','dex','dodge','pdef','mdef','crit']
-items = ['Weapon','Armor','Acc']
+items = ['Weapon','Armor','Accessory']
 
 def item_enchant(player):
     while True:
         for i, item in enumerate(items):
             print(f'{i+1} - {item}')
         choice = input('Which item do you want to enchant? [E to Exit]').capitalize()
-        match choice:
+        match choice.capitalize():
             case '1' | 'Weapon':
                 choice = 'weapon'
                 enchant_roll(player, choice)
             case '2' | 'Armor':
                 choice = 'armor'
                 enchant_roll(player, choice)
-            case '3' | 'Trinket':
+            case '3' | 'Accessory' | 'Acc':
                 choice = 'trinket'
                 enchant_roll(player, choice)
             case 'E' | 'Exit':
@@ -34,19 +34,21 @@ def enchant_roll(player, choice):
         if confirm.capitalize() in ['Y','Yes']:
             player.gold -= enchant_cost
             value = 0
+
             draw = random.choice(attributes)
 
             match draw:
                 case 'hp' | 'mana':
-                    value = random.randint(20, 200)
+                    value = random.randint(50, 200)
                 case 'hp_regen' | 'mana_regen':
                     value = random.randint(5, 20)
                 case 'str' | 'dex' | 'int' | 'pdef' | 'mdef' | 'dodge' | 'crit' :
                     value = random.randint(1, 5)
 
-            confirm2 = input(f'Want to enchant the {choice.capitalize()} with {draw.upper()}: +{value} ? [Y]')
-            if confirm2.capitalize() in ['Y', 'Yes']:
+            confirm = input(f'Want to enchant the {choice.capitalize()} with {draw.upper()}: +{value} ? [Y]')
+            if confirm.capitalize() in ['Y', 'Yes']:
                 match choice:
+
                     case 'weapon':
                         item = list(player.weapon.keys())[0]
                         if draw in player.weapon[item]:
@@ -54,7 +56,7 @@ def enchant_roll(player, choice):
                         else:
                             player.weapon[item][draw] = value
                         if not item.lower().startswith("enchanted"):
-                            new_name = f"Enchanted {item.title()}"
+                            new_name = f"Enchanted {item.title()}+1"
                             player.weapon[new_name] = player.weapon.pop(item)
 
                     case 'armor':

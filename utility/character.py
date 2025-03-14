@@ -14,7 +14,7 @@ init_magics =  {
                         "Heal": {"level": 1, "mana": 10, "tooltip": ['int'], "heal": 3, "exp": [0, 30]}}
         }
 
-item_order = ['hp','hp_regen','mana_regen','mana','str','int','dex','dodge','pdef','mdef','crit']
+item_order = ['hp','hp_regen','mana_regen','mana','str','int','dex','dodge','pdef','mdef','crit','exp','gold']
 
 class Player:
     def __init__(self, name, class_name):
@@ -83,7 +83,7 @@ class Player:
             self.weapon[item] = {stats: self.weapon[item][stats] for stats in item_order if stats in self.weapon[item]}
             for stats, value in self.weapon[item].items():
                 if stats != 'gold':
-                    print(f' {stats.upper()} : {value}', end='  |  ')
+                    print(f' {stats.upper().replace("_", " ")} : {value}', end='  |  ')
             print('')
         if self.armor == {}:
             print('Armor: None equipped')
@@ -93,7 +93,7 @@ class Player:
             self.armor[item] = {stats: self.armor[item][stats] for stats in item_order if stats in self.armor[item]}
             for stats, value in self.armor[item].items():
                 if stats != 'gold':
-                    print(f' {stats.upper()} : {value}', end='  |  ')
+                    print(f' {stats.upper().replace("_", " ")} : {value}', end='  |  ')
             print('')
         if self.trinket == {}:
             print('Accessory: None equipped')
@@ -103,7 +103,7 @@ class Player:
             self.trinket[item] = {stats: self.trinket[item][stats] for stats in item_order if stats in self.trinket[item]}
             for stats, value in self.trinket[item].items():
                 if stats != 'gold':
-                    print(f' {stats.upper()} : {value}', end='  |  ')
+                    print(f' {stats.upper().replace("_", " ")} : {value}', end='  |  ')
         print('\n--------------------------------------------------------------------')
         print('SPELLS:')
         for spell, attributes in self.magics.items():

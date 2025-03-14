@@ -115,10 +115,12 @@ def reset_player_mana(player):
 
 
 def regen(player):
+    player.hp = min(player.hp + player.hp_regen, player.hp_max)
     if player.class_name in ['Rogue', 'Mage', 'Paladin']:
         player.mana = min(player.mana + player.mana_regen, player.mana_max)
-    elif player.class_name == 'Warrior':
-        player.hp = min(player.hp + player.hp_regen, player.hp_max)
+    print(f'\nYou gained {player.mana_regen} {player.resource.upper()} and {player.hp_regen} HP , for your regen')
+
+
 
 
 def exp_gold_gain(player, monster):
